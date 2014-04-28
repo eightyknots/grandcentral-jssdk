@@ -8,33 +8,33 @@ You **will need** a Simul8 API key, and potentially more for access.
 Include either the full Javascript API or the minified API before your closing body tag. You can also load the library asynchronously.
 
 	<script type="text/javascript">
-	  var gcsdkParams = {api_key: '*****<your_api_key_here>*****'};
-	  (function(d,p) {
-	    var gc = d.createElement('script');
-	    gc.type = 'text/javascript'; gc.async = true;
-	    gc.src = '*****<path_to_sdk_folder>*****/gcsdk.js?';
-	    var s = document.getElementsByTagName('script')[0];
-	    s.parentNode.insertBefore(gc, s);
-	    gc.addEventListener('load', function () {
-	      document.gcsdk = gcsdk(p);
-	      
-	      // *********************
-	      // Your callback here
-	      // *********************
-	      
-	    }
-	  })(document,gcsdkParams);
+	window.gcsdkinit = function () {
+	  gcsdk.init({ api_key: 'your-api-key-here' });
+	};
+	(function(d) { 
+	  var gc = d.createElement('script');
+	  gc.type = 'text/javascript'; gc.async = true;
+	  gc.src = '../sdk/gcsdk.js';
+	  var s = d.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gc, s);
+	})(document);
 	</script>
 	
+### `gcsdk.init` Callback Function
+When the SDK is loaded, it called `gcsdkinit()`. To formally initialize the SDK you should call `gcsdk.init()`. `init()` is defined below.
+
+
 
 ## Method Calls
 
-### `object` getSession()
+### General Methods
+
+#### session(`function callback`)
 Sends a request to get the user's current session information. The AJAX call resembles:
 
 	GET https://login.uclalibrary.org/api/session
 	
-The response object looks like this
+The response object (passed to the callback function) looks like this...
 
 	{
 	  logged_in: true,
@@ -55,7 +55,6 @@ The response object looks like this
 	      profile_pic: "<URI to photo>"
 	    },
 	    google: {
-	      service: "google",
 	      user_id: "10221630102581019991",
 	      first_name: "John",
 	      last_name: "Smith",
@@ -71,7 +70,7 @@ The response object looks like this
 * include a ticket access key (see Access Keys below)
 
 
-### `string` getStashdHash()
+#### stashdHash(`string user_id`, `function callback()`)
 If your API key allows [Stashd](https://stashd.uclalibrary.org) hash integration you can request a user's Stashd hash value for link saving.
 
 	var userHash = getStashdHash(user_id, callback);
@@ -79,3 +78,18 @@ If your API key allows [Stashd](https://stashd.uclalibrary.org) hash integration
 Returns `null` if the user ID does not have a Stashd hash on record.
 
 ***Note:*** This method **is slow**. I am aware of this and am working on a faster call time.
+
+### Helper Methods
+
+#### init(`object params`[, `function callback()`])
+Initializes the SDK with a given set of params. At minimum, params should include your API key.
+
+	gcsdk.init({api_key: 'your_key_here'});
+
+The callback function returns `true` on initialization.
+
+#### `string` version()
+Returns a string containing the current SDK version.
+
+#### `string` latest()
+Returns a string containing the latest API implementation. Documentation is available [on the Grand Central website](http://login.uclalibrary.org/devs/).

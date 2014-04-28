@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Simul8 /api/session demo</title>
-	<link href="./main.css" type="text/css" rel="stylesheet">
+    <title>Simul8 /api/session demo</title>
+    <link href="./main.css" type="text/css" rel="stylesheet">
 </head>
 <body>
 <h1>Full Workflow</h1>
@@ -10,32 +10,32 @@ Coming soon.
 <hr>
 <h2>Other Demos</h2>
 <p>
-	<ul>
-		<li><a href="./demo_get_session.html">Get user session</a></li>
-		<li><a href="./demo_post_ticket.html">Post a ticket</a></li>
-	</ul>
+    <ul>
+        <li><a href="./demo_get_session.html">Get user session</a></li>
+        <li><a href="./demo_post_ticket.html">Post a ticket</a></li>
+    </ul>
 </p>
 <hr>
 <p class="footer">
-	<span id="sdk_status">SDK not yet loaded.</span><br>
-	Developed by the <a href="http://www.simul8group.org/">Simul8 Group</a> with support from the Arcadia Fund<br>
-	&copy; Copyright Regents of the University of California
+    <span id="sdk_status">SDK not yet loaded.</span><br>
+    Developed by the <a href="http://www.simul8group.org/">Simul8 Group</a> with support from the Arcadia Fund<br>
+    &copy; Copyright Regents of the University of California
 </p>
 <script type="text/javascript">
 window.gcsdkinit = function () {
-	gcsdk.init({ api_key: 'your-api-key-here' }, function() {
-		var sdk = document.getElementById('sdk_status');
-		sdk.textContent = 'SDK (Version '+gcsdk.version()+') loaded!';
-		sdk.style.color = 'darkgreen'; sdk.style.fontWeight = 'bold';
-	});
+    gcsdk.init({ api_key: 'your-api-key-here' }, function() {
+        var sdk = document.getElementById('sdk_status');
+        sdk.textContent = 'SDK (Version '+gcsdk.version()+') loaded!';
+        sdk.style.color = 'darkgreen'; sdk.style.fontWeight = 'bold';
+    });
 };
 
 (function(d) { 
-	var gc = d.createElement('script');
-	gc.type = 'text/javascript'; gc.async = true;
-	gc.src = '../sdk/gcsdk.js';
-	var s = d.getElementsByTagName('script')[0];
-	s.parentNode.insertBefore(gc, s);
+    var gc = d.createElement('script');
+    gc.type = 'text/javascript'; gc.async = true;
+    gc.src = '../sdk/gcsdk.js';
+    var s = d.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gc, s);
 })(document);
 </script>
 </body>
