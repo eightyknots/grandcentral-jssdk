@@ -1,0 +1,40 @@
+html {
+	font-family: 'Lucida Grande', Tahoma, Arial, sans-serif;
+	font-size: 13px;
+}
+
+h1, h2, h3 {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+h1 {
+	background-color: #444444;
+	color: #ffffff;
+	padding: 0.4em;
+}
+
+h2 {
+	color: #444444;
+}
+
+hr {
+	margin: 2em 0;
+	border-width: 0 0 1px 0;
+	border-style: dashed;
+	border-color: #aaaaaa;
+}
+
+p.footer {
+	color: #aaaaaa;
+	text-align: left;
+	font-size: 0.9em;
+}
+
+a, a:visited, a:active {
+	color: #0e52bf;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Simul8 /api/session demo</title>
+	<link href="./main.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<h1>Session Information</h1>
+<p>Click "Load Session Info" to reload</p>
+<button id="reload_info">Load Session Info</button> <button id="reload_nohash">Load Session Info (No Stashd Hash)</button>
+<p id="status"></p>
+<p><img id="profile_pic"> <span id="name"></span></p>
+<p id="stashhash"></p>
+<p id="timetaken"></p>
+<hr>
+<h2>Other Demos</h2>
+<p>
+	<ul>
+		<li><a href="./demo_post_ticket.html">Post a ticket</a></li>
+		<li><a href="./demo_full_workflow.html">Full workflow</a></li>
+	</ul>
+</p>
+<hr>
+<p class="footer">
+	<span id="sdk_status">SDK not yet loaded.</span><br>
+	Developed by the <a href="http://www.simul8group.org/">Simul8 Group</a> with support from the Arcadia Fund<br>
+	&copy; Copyright Regents of the University of California
+</p>
+<script type="text/javascript">
+window.gcsdkinit = function () {
+	gcsdk.init({ api_key: 'your-api-key-here' }, function() {
+		var sdk = document.getElementById('sdk_status');
+		sdk.textContent = 'SDK (Version '+gcsdk.version()+') loaded!';
+		sdk.style.color = 'darkgreen'; sdk.style.fontWeight = 'bold';
+	});
+};
+
+(function(d) { 
+	var gc = d.createElement('script');
+	gc.type = 'text/javascript'; gc.async = true;
+	gc.src = '../sdk/gcsdk.js';
+	var s = d.getElementsByTagName('script')[0];
+	s.parentNode.insertBefore(gc, s);
+
+	d.getElementById('reload_info').addEventListener('click', function() {
+		var btn = d.getElementById('reload_info');
+		btn.textContent = 'Please wait...';
+		btn.setAttribute('disabled', 'true');
+
+		var start = new Date().getTime();
+		var st = d.getElementById('status'); var pp = d.getElementById('profile_pic'); var n = d.getElementById('name'); var sh = d.getElementById('stashhash'); var tt = d.getElementById('timetaken');
+		st.textContent = 'Loading...';
+		st.style.color = '#777777';
+		st.style.fontWeight = 'normal';
+		pp.src = ''; n.textContent = ''; sh.textContent = ''; tt.textContent = 'Time taken: Still working';
+		
+		gcsdk.session(function (sessinfo) {
+			if (!sessinfo.logged_in) {
+				st.textContent = 'No session found.';
+				st.style.color = 'darkred'; st.style.fontWeight = 'bold';
+				var end = new Date().getTime();
+				var time = end-start;
+				d.getElementById('reload_info').removeAttribute('disabled');
+				d.getElementById('reload_info').textContent = 'Reload Info';
+				tt.textContent = 'Time taken: ' + time/1000 + 's';
+			} else {
+				st.textContent = 'Session is active [' + sessinfo.session.connection + ']';
+				st.style.color = 'darkgreen'; st.style.fontWeight = 'bold';
+				n.textContent = sessinfo.connections[sessinfo.session.connection].first_name + ' ' + sessinfo.connections[sessinfo.session.connection].last_name;
+				pp.src = sessinfo.connections[sessinfo.session.connection].profile_pic;
+				sh.textContent = 'Loading Stashd hash'; sh.style.color = '#777777';
+
+				gcsdk.stashdHash(sessinfo.user.user_id, function(userhash) {
+					sh.textContent = 'Your Stashd hash: ' + userhash;
+					sh.style.color = '#000000';
+					var end = new Date().getTime();
+					var time = end-start;
+					d.getElementById('reload_info').removeAttribute('disabled');
+					d.getElementById('reload_info').textContent = 'Reload Info';
+					tt.textContent = 'Time taken: ' + time/1000 + 's';
+				});
+			}
+		});
+	});
+	
+	d.getElementById('reload_nohash').addEventListener('click', function() {
+		this.textContent = 'Please wait...';
+		this.setAttribute('disabled', 'true');
+		var start = new Date().getTime();
+		var st = d.getElementById('status'); var pp = d.getElementById('profile_pic'); var n = d.getElementById('name'); var sh = d.getElementById('stashhash'); var tt = d.getElementById('timetaken');
+		st.textContent = 'Loading...';
+		st.style.color = '#777777';
+		st.style.fontWeight = 'normal';
+		pp.src = ''; n.textContent = ''; sh.textContent = ''; tt.textContent = 'Time taken: Still working';
+		
+		gcsdk.session(function (sessinfo) {
+			if (!sessinfo.logged_in) {
+				st.textContent = 'No session found.';
+				st.style.color = 'darkred'; st.style.fontWeight = 'bold';
+			} else {
+				st.textContent = 'Session is active [' + sessinfo.session.connection + ']';
+				st.style.color = 'darkgreen'; st.style.fontWeight = 'bold';
+				n.textContent = sessinfo.connections[sessinfo.session.connection].first_name + ' ' + sessinfo.connections[sessinfo.session.connection].last_name;
+				pp.src = sessinfo.connections[sessinfo.session.connection].profile_pic;
+				sh.textContent = 'Skipping Stashd hash'; sh.style.color = '#777777';
+			}
+			d.getElementById('reload_nohash').removeAttribute('disabled');
+			d.getElementById('reload_nohash').textContent = 'Reload Info (No Stashd Hash)';
+			var end = new Date().getTime();
+			var time = end-start;
+			tt.textContent = 'Time taken: ' + time/1000 + 's';
+		});
+	});
+})(document);
+</script>
+</body>
+</html>
