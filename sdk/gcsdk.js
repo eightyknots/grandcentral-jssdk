@@ -17,6 +17,14 @@ var gcsdk = {
     version: function() {
         return this.local.sdk;
     },
+    api: function() {
+        var r = new XMLHttpRequest();
+        r.open('GET', 'https://login-dev.uclalibrary.org/api/version', false);
+        r.send(null);
+
+        if (r.status === 200) return r.responseText;
+        else return null;
+    },
     init: function(setParams, cb) {
         this.params = setParams;
         if (this.local.debug) console.log('[gcsdk] Started API with key: '+this.params.api_key);
@@ -35,16 +43,15 @@ var gcsdk = {
 
         var r = new XMLHttpRequest(); 
         r.withCredentials = true;
-        r.responseType = 'json';
         r.open(
-            'get',
+            'GET',
                 'https://login-dev.uclalibrary.org/api/'+ ep + 
                 '/?' + this.serialize(qs),
             true);
         r.onreadystatechange = function () {
             if (r.readyState != 4 || r.status != 200) return this.error;
-            if (!cb) console.log(r.response);
-            else cb(r.response);
+            if (!cb) console.log(JSON.parse(r.responseText));
+            else cb(JSON.parse(r.responseText));
         }
         r.send();
         return;
