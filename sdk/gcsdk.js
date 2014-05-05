@@ -10,16 +10,16 @@ var gcsdk = {
     params: { },
     local: {
         source: 'gcsdk',
-        sdk: '0.0.1',
+        sdk: '0.0.2',
         minified: false,
-        debug: true
+        debug: false
     },
     version: function() {
         return this.local.sdk;
     },
     api: function() {
         var r = new XMLHttpRequest();
-        r.open('GET', 'https://login-dev.uclalibrary.org/api/version', false);
+        r.open('GET', 'https://login.uclalibrary.org/api/version', false);
         r.send(null);
 
         if (r.status === 200) return r.responseText;
@@ -35,19 +35,28 @@ var gcsdk = {
         this.ajax('session', null, cb);
         return;
     },
+    stashdSaveLink: function(uid, url, title, comment) {
+        this.stashdHash(uid, function(hash) {
+            var d = document, i = d.createElement('iframe');
+            i.setAttribute('style','z-index:2147483647;position:fixed;left:10px;top:10px;width:300px;height:46px;border:0;');
+            i.setAttribute('scrolling','no');
+            d.body.appendChild(i);
+            i.contentDocument.write('<form id="s" method="post" action="https://stashd.uclalibrary.org/links/add" accept-charset="utf-8" style="display:none"><input type="hidden" name="_method" value="POST"/><input name="data[Link][t]" type="hidden" value="'+title+'"/><input name="data[Link][u]" type="hidden" value="'+url+'"/><input name="data[Link][e]" type="hidden" value="'+comment+'"/><input name="data[Link][h]" type="hidden" value="'+hash+'"/><input type="submit" value="Submit"/></form><script>(function() {document.getElementById("s").submit();})();</script>');
+        });
+    },
     stashdHash: function(uid,cb) {
-        this.ajax('stashd_hash', {user_id: uid}, function (data) { cb(data.hash); });
+        this.ajax('stashd_hash', {user_id: uid}, function (data) { this.userStashdHash = data.hash; cb(data.hash); });
         return;
     },
     ajax: function(ep,qs,cb) {
 
         var r = new XMLHttpRequest(); 
-        r.withCredentials = true;
         r.open(
             'GET',
-                'https://login-dev.uclalibrary.org/api/'+ ep + 
-                '/?' + this.serialize(qs),
+                'https://login.uclalibrary.org/api/'+ ep + 
+                '/?' + this.serialize(qs) + '&api_key=' + encodeURIComponent(this.params.api_key),
             true);
+        r.withCredentials = true;
         r.onreadystatechange = function () {
             if (r.readyState != 4 || r.status != 200) return this.error;
             if (!cb) console.log(JSON.parse(r.responseText));
@@ -64,11 +73,10 @@ var gcsdk = {
                 this.serialize(v, k) :
                 encodeURIComponent(k) + "=" + encodeURIComponent(v));
         }
-        str.push('api_key=' + encodeURIComponent(this.params.api_key));
         return str.join("&");
     },
     error: function(msg) {
-        console.log('[gcsdk] An error occured' + (msg ? ': ' + msg : '.'));
+        if (this.local.debug) console.log('[gcsdk] An error occured' + (msg ? ': ' + msg : '.'));
         return;
     }
 
