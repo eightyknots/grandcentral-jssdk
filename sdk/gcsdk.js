@@ -35,21 +35,31 @@ var gcsdk = {
         this.ajax('session', null, cb);
         return;
     },
-    stashdSaveLink: function(uid, url, title, comment) {
-        this.stashdHash(uid, function(hash) {
-            var d = document, i = d.createElement('iframe');
-            i.setAttribute('style','z-index:2147483647;position:fixed;left:10px;top:10px;width:300px;height:46px;border:0;');
-            i.setAttribute('scrolling','no');
-            d.body.appendChild(i);
-            i.contentDocument.write('<form id="s" method="post" action="https://stashd.uclalibrary.org/links/add" accept-charset="utf-8" style="display:none"><input type="hidden" name="_method" value="POST"/><input name="data[Link][t]" type="hidden" value="'+title+'"/><input name="data[Link][u]" type="hidden" value="'+url+'"/><input name="data[Link][e]" type="hidden" value="'+comment+'"/><input name="data[Link][h]" type="hidden" value="'+hash+'"/><input type="submit" value="Submit"/></form><script>(function() {document.getElementById("s").submit();})();</script>');
-        });
+    stashd: function(uid, url, title, cb) {
+        // This will need, in the future, an access key
+        var h = new XMLHttpRequest();
+        var params = 'api_key='+this.params.api_key+'&uid='+uid+'&url='+encodeURIComponent(url)+'&title='+encodeURIComponent(title);
+        h.open('POST', 'https://login.uclalibrary.org/api/stashd', true);
+        h.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        h.setRequestHeader('Content-Length', params.length);
+        h.setRequestHeader('Connection', 'close');
+        h.onreadystatechange = function() {
+            if(h.readyState == 4 && h.status == 200) {
+                var returned = JSON.parse(h.responseText);
+                if (typeof cb == 'undefined') {
+                    console.log(returned);
+                } else {
+                    cb(returned);
+                }
+            }
+        };
+        h.send(params);
     },
     stashdHash: function(uid,cb) {
         this.ajax('stashd_hash', {user_id: uid}, function (data) { this.userStashdHash = data.hash; cb(data.hash); });
         return;
     },
     ajax: function(ep,qs,cb) {
-
         var r = new XMLHttpRequest(); 
         r.open(
             'GET',
