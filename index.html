@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simul8 /api/session demo</title>
+    <link href="./demo/main.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<h1>Grandcentral Javascript SDK</h1>
+<h2>Github Repository</h2>
+<p>Code located at <a href="http://github.com/yectep/grandcentral-jssdk">yectep.github.com/grandcentral-jssdk</a>.</p>
+<h2>Releases</h2>
+<p>
+    <ul>
+        <li><strong>Version 0.0.2 (preview)</strong>
+            <ul>
+                <li><a href="https://github.com/yectep/grandcentral-jssdk/archive/0.0.2.zip">Download latest .zip</a></li>
+                <li><a href="https://github.com/yectep/grandcentral-jssdk/archive/0.0.2.tar.gz">Download latest .tar.gz</a></li>
+            </ul>
+        </li>
+    </ul>
+</p>
+<h2>Live Demos Available</h2>
+<p>
+    <ul>
+        <li><a href="./demo/demo_get_session.html">Get user session</a></li>
+        <li><a href="./demo/demo_post_ticket.html">Post a ticket</a></li>
+        <li><a href="./demo/demo_full_workflow.html">Full workflow</a></li>
+    </ul>
+</p>
+<h2>Changelog</h2>
+<p>
+    <ul>
+        <li><strong>Version 0.0.2</strong>
+            <ul>
+                <li><strong>Fixed</strong> (MSIE) .withCredentials is not defined until after .open is called in XMLHttpRequest</li>
+                <li><strong>Fixed</strong> System calls login master instead of login dev</li>
+                <li><strong>Added</strong> Web Stashd link saving now in preview mode</li>
+            </ul>
+        </li>
+    </ul>
+</p>
+<hr>
+<p class="footer">
+    <span id="sdk_status">SDK not yet loaded.</span><br>
+    Developed by the <a href="http://www.simul8group.org/">Simul8 Group</a> with support from the Arcadia Fund<br>
+    &copy; Copyright Regents of the University of California
+</p>
+<script type="text/javascript">
+window.gcsdkinit = function () {
+    gcsdk.init({ api_key: 'cc4553bb-b3cc-499a-8bff-571060ae2adf' }, function() {
+        var sdk = document.getElementById('sdk_status');
+        var api = gcsdk.api();
+        sdk.textContent = 'Loaded: SDK (Version '+gcsdk.version()+'), API (Version '+api+')';
+        sdk.style.color = 'darkgreen'; sdk.style.fontWeight = 'bold';
+    });
+};
+
+(function(d) { 
+    var gc = d.createElement('script');
+    gc.type = 'text/javascript'; gc.async = true;
+    gc.src = './sdk/gcsdk.js';
+    var s = d.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gc, s);
+})(document);
+</script>
+</body>
+</html>

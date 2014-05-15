@@ -27,7 +27,7 @@ var gcsdk = {
     },
     init: function(setParams, cb) {
         this.params = setParams;
-        if (this.local.debug) console.log('[gcsdk] Started API with key: '+this.params.api_key);
+        if (this.local.debug) console.Ïlog('[gcsdk] Started API with key: '+this.params.api_key);
         if (cb) cb(true);
         return;
     },
