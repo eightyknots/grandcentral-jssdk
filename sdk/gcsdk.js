@@ -10,7 +10,7 @@ var gcsdk = {
     params: { },
     local: {
         source: 'gcsdk',
-        sdk: '0.0.2',
+        sdk: '0.0.3',
         minified: false,
         debug: false
     },
@@ -38,7 +38,7 @@ var gcsdk = {
     stashd: function(uid, url, title, cb) {
         // This will need, in the future, an access key
         var h = new XMLHttpRequest();
-        var params = 'api_key='+this.params.api_key+'&uid='+uid+'&url='+encodeURIComponent(url)+'&title='+encodeURIComponent(title);
+        var params = 'api_key='+this.params.api_key+'&user_id='+uid+'&url='+encodeURIComponent(url)+'&title='+encodeURIComponent(title);
         h.open('POST', 'https://login.uclalibrary.org/api/stashd', true);
         h.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         h.setRequestHeader('Content-Length', params.length);
