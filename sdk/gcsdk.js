@@ -27,7 +27,7 @@ var gcsdk = {
     },
     init: function(setParams, cb) {
         this.params = setParams;
-        if (this.local.debug) console.Ïlog('[gcsdk] Started API with key: '+this.params.api_key);
+        if (this.local.debug) console.log('[gcsdk] Started API with key: '+this.params.api_key);
         if (cb) cb(true);
         return;
     },
@@ -58,6 +58,39 @@ var gcsdk = {
     stashdHash: function(uid,cb) {
         this.ajax('stashd_hash', {user_id: uid}, function (data) { this.userStashdHash = data.hash; cb(data.hash); });
         return;
+    },
+    ticket: function (cburl, cb) {
+        var nonce = '';
+        var ak = this.params.api_key;
+        this.ajax('nonce', '', function (nonceData) {
+            nonce = nonceData.nonce;
+            var t = new XMLHttpRequest();
+            var params = 'api_key='+ak+'&callback='+encodeURIComponent(cburl)+'&nonce='+nonce;
+            t.open('POST', 'https://login.uclalibrary.org/api/ticket/');
+            t.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            t.setRequestHeader('Content-Length', params.length);
+            t.setRequestHeader('Connection', 'close');
+            t.onreadystatechange = function() {
+                if(t.readyState == 4 && t.status == 201) {
+                    var returned = JSON.parse(t.responseText);
+                    if (typeof cb == 'undefined') {
+                        console.log(returned);
+                    } else {
+                        cb(returned);
+                    }
+                }
+            };
+            t.send(params);
+        });
+    },
+    login: function (cburl) {
+        this.ticket(cburl, function(ticket) {
+            if (typeof ticket.url == "string") {
+                window.location=ticket.url;
+            } else {
+                console.log(ticket);
+            }
+        });
     },
     ajax: function(ep,qs,cb) {
         var r = new XMLHttpRequest(); 

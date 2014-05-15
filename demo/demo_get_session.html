@@ -12,6 +12,7 @@
 <p><img id="profile_pic"> <span id="name"></span></p>
 <p id="stashhash"></p>
 <p id="timetaken"></p>
+<button id="log_in" style="display:none;">Login</button>
 <hr>
 <h2>Other Demos</h2>
 <p>
@@ -64,6 +65,7 @@ window.gcsdkinit = function () {
                 d.getElementById('reload_info').removeAttribute('disabled');
                 d.getElementById('reload_info').textContent = 'Reload Info';
                 tt.textContent = 'Time taken: ' + time/1000 + 's';
+                d.getElementById('log_in').style.display='inline';
             } else {
                 st.textContent = 'Session is active [' + sessinfo.session.connection + ']';
                 st.style.color = 'darkgreen'; st.style.fontWeight = 'bold';
@@ -83,6 +85,10 @@ window.gcsdkinit = function () {
             }
         });
     });
+
+    d.getElementById('log_in').addEventListener('click', function() {
+        gcsdk.login(window.location);
+    });
     
     d.getElementById('reload_nohash').addEventListener('click', function() {
         this.textContent = 'Please wait...';
@@ -98,6 +104,7 @@ window.gcsdkinit = function () {
             if (!sessinfo.logged_in) {
                 st.textContent = 'No session found.';
                 st.style.color = 'darkred'; st.style.fontWeight = 'bold';
+                d.getElementById('log_in').style.display='inline';
             } else {
                 st.textContent = 'Session is active [' + sessinfo.session.connection + ']';
                 st.style.color = 'darkgreen'; st.style.fontWeight = 'bold';
