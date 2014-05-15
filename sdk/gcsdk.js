@@ -92,6 +92,9 @@ var gcsdk = {
             }
         });
     },
+    logout: function (cburl) {
+        window.location='https://login.uclalibrary.org/logout/?callback='+window.location;
+    },
     ajax: function(ep,qs,cb) {
         var r = new XMLHttpRequest(); 
         r.open(
