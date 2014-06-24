@@ -23,6 +23,12 @@ Include either the full Javascript API or the minified API before your closing b
 ### `gcsdk.init` Callback Function
 When the SDK is loaded, it called `gcsdkinit()`. To formally initialize the SDK you should call `gcsdk.init()`. `init()` is defined below.
 
+### Calling Remote
+The most up to date SDK is also available at
+	
+	https://login.uclalibrary.org/edge/gcsdk.js
+
+
 
 
 ## Method Calls
@@ -70,14 +76,26 @@ The response object (passed to the callback function) looks like this...
 * include a ticket access key (see Access Keys below)
 
 
-#### stashdHash(`string user_id`, `function callback()`)
-If your API key allows [Stashd](https://stashd.uclalibrary.org) hash integration you can request a user's Stashd hash value for link saving.
+#### stashd(`string` user_id, `string` url, `string` title, `function` callback())
 
-	var userHash = getStashdHash(user_id, callback);
-	
-Returns `null` if the user ID does not have a Stashd hash on record.
+<span style="color:darkred;">**NOTE**</span>: In the future `user_id` will be replaced by an `access_token`, so look out for that!
 
-***Note:*** This method **is slow**. I am aware of this and am working on a faster call time.
+This method will push a given URL with title to a logged in user's Stashd library. It sents a POST request to the following endpoint.
+
+	POST https://login.uclalibrary.org/api/stashd
+
+#### login(`string url`)
+Like the name suggests, this POSTs a ticket to the API with your initialized API key and automagically takes you to the Simul8 login service. It takes a callback url as its only argument.
+
+	POST https://login.uclalibrary.org/api/ticket
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: <some length>
+	Connection: close
+
+You can also reference the `ticket()` function directly. See below for more details.
+
+#### logout(`string url`)
+Immediately sends user to `https://login.uclalibrary.org/logout` with an optional callback URL. The URL is encoded automatically.
 
 ### Helper Methods
 
